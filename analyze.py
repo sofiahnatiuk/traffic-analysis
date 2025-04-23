@@ -68,11 +68,11 @@ class StopAnalyzer:
         return stop_stats.sort_values(by="adjusted_vehicles_per_day", ascending=False)
 
 
-def get_busiest_stops(stops_file: str, intervals_file: str) -> pd.DataFrame:
+def get_busiest_stops(stops_file: str, intervals_file: str, top_n: int = 10) -> pd.DataFrame:
     loader = RouteDataLoader(stops_file, intervals_file)
     stops_df, intervals_df = loader.get_dataframes()
 
     analyzer = StopAnalyzer(stops_df, intervals_df)
     busiest = analyzer.compute_busiest_stops()
 
-    return busiest.head(10)
+    return busiest.head(top_n)

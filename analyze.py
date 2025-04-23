@@ -1,4 +1,5 @@
 import pandas as pd
+from cluster import cluster_busiest_stops
 
 class RouteDataLoader:
     """
@@ -75,12 +76,19 @@ class StopAnalyzer:
         return stop_stats.sort_values(by="vehicles_per_week", ascending=False)
 
 
-def get_busiest_stops(stops_file: str, intervals_file: str, output_csv: str = "busiest_stops.csv", top_n: int = 10) -> pd.DataFrame:
+def get_busiest_stops(
+        stops_file: str,
+        intervals_file: str,
+        output_csv: str = "busiest_stops.csv",
+        top_n: int = 10,
+        eps_meters: float = 50.0
+    ) -> pd.DataFrame:
     loader = RouteDataLoader(stops_file, intervals_file)
     stops_df, intervals_df = loader.get_dataframes()
 
     analyzer = StopAnalyzer(stops_df, intervals_df)
     busiest = analyzer.compute_busiest_stops()
+    busiest = cluster_busiest_stops(busiest, eps_meters)
 
     busiest.head(top_n).to_csv(output_csv, index=False)
     print(f"Saved top {top_n} busiest stops to {output_csv}")

@@ -1,5 +1,5 @@
-import csv
 import logging
+import pandas as pd
 from fetch import TransportFetcher
 from parse import TransportParser
 from requests.exceptions import RequestException
@@ -12,7 +12,6 @@ def save_all_data_to_csv(
     fetcher = TransportFetcher()
     parser = TransportParser()
 
-    # Set up logging
     logging.basicConfig(
         filename="save_errors.log",
         level=logging.WARNING,
@@ -22,31 +21,38 @@ def save_all_data_to_csv(
     all_routes_data = fetcher.fetch_all_routes()
     route_ids = parser.parse_route_ids(all_routes_data)
 
-    with open(stops_file, mode="w", newline="", encoding="utf-8") as sf, \
-         open(intervals_file, mode="w", newline="", encoding="utf-8") as inf:
+    stops = []
+    intervals = []
 
-        stop_writer = csv.writer(sf)
-        interval_writer = csv.writer(inf)
+    for route_id in route_ids:
+        try:
+            route_data = fetcher.fetch_route_detail(route_id)
 
-        stop_writer.writerow(["route_id", "stop_id", "stop_name", "direction"])
-        interval_writer.writerow(["route_id", "from", "to", "interval_sec", "weekdays"])
+            for stop_id, stop_name, direction in parser.parse_stops(route_data):
+                stops.append({
+                    "route_id": route_id,
+                    "stop_id": stop_id,
+                    "stop_name": stop_name,
+                    "direction": direction
+                })
 
-        for route_id in route_ids:
-            try:
-                route_data = fetcher.fetch_route_detail(route_id)
+            for from_time, to_time, interval, weekdays in parser.parse_intervals(route_data):
+                intervals.append({
+                    "route_id": route_id,
+                    "from": from_time,
+                    "to": to_time,
+                    "interval_sec": interval,
+                    "weekdays": weekdays
+                })
 
-                # Save stops data
-                for stop_id, stop_name, direction in parser.parse_stops(route_data):
-                    stop_writer.writerow([route_id, stop_id, stop_name, direction])
+        except RequestException as e:
+            logging.warning(f"Request failed for route_id {route_id}: {e}")
+        except Exception as e:
+            logging.warning(f"Unexpected error for route_id {route_id}: {e}")
 
-                # Save intervals data
-                for from_time, to_time, interval, weekdays in parser.parse_intervals(route_data):
-                    interval_writer.writerow([route_id, from_time, to_time, interval, weekdays])
-
-            except RequestException as e:
-                logging.warning(f"Request failed for route_id {route_id}: {e}")
-            except Exception as e:
-                logging.warning(f"Unexpected error for route_id {route_id}: {e}")
+    # Convert lists to DataFrames and write to CSV
+    pd.DataFrame(stops).to_csv(stops_file, index=False)
+    pd.DataFrame(intervals).to_csv(intervals_file, index=False)
 
     print(f"Saved {len(route_ids)} routes to {stops_file} and {intervals_file}.")
 

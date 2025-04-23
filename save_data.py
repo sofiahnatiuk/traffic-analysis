@@ -1,42 +1,53 @@
-# save_data.py
-
 import csv
 import logging
-from fetch import TransportDataFetcher
+from fetch import TransportFetcher
+from parse import TransportParser
 from requests.exceptions import RequestException
 
 
-def save_stops_to_csv(filename: str = "stops.csv") -> None:
-    fetcher = TransportDataFetcher()
-    routes = fetcher.parse_route_ids(fetcher.fetch_all_routes())
+def save_all_data_to_csv(
+    stops_file: str = "stops.csv",
+    intervals_file: str = "intervals.csv"
+) -> None:
+    fetcher = TransportFetcher()
+    parser = TransportParser()
 
     # Set up logging
     logging.basicConfig(
-        filename="save_stops_errors.log",
+        filename="save_errors.log",
         level=logging.WARNING,
         format="%(asctime)s - %(levelname)s - %(message)s"
     )
 
-    with open(filename, mode="w", newline="", encoding="utf-8") as f:
-        writer = csv.writer(f)
-        writer.writerow(["route_id", "stop_id", "stop_name", "direction"])
+    all_routes_data = fetcher.fetch_all_routes()
+    route_ids = parser.parse_route_ids(all_routes_data)
 
-        for route_id in routes:
+    with open(stops_file, mode="w", newline="", encoding="utf-8") as sf, \
+         open(intervals_file, mode="w", newline="", encoding="utf-8") as inf:
+
+        stop_writer = csv.writer(sf)
+        interval_writer = csv.writer(inf)
+
+        stop_writer.writerow(["route_id", "stop_id", "stop_name", "direction"])
+        interval_writer.writerow(["route_id", "from", "to", "interval_sec"])
+
+        for route_id in route_ids:
             try:
                 route_data = fetcher.fetch_route_detail(route_id)
-                for direction in ("forward", "backward"):
-                    for stop in route_data.get("stops", {}).get(direction, []):
-                        stop_id = stop.get("i")
-                        stop_name = stop.get("n")
-                        if stop_id and stop_name:
-                            writer.writerow([route_id, stop_id, stop_name, direction])
+
+                for stop_id, stop_name, direction in parser.parse_stops(route_data):
+                    stop_writer.writerow([route_id, stop_id, stop_name, direction])
+
+                for from_time, to_time, interval in parser.parse_intervals(route_data):
+                    interval_writer.writerow([route_id, from_time, to_time, interval])
+
             except RequestException as e:
                 logging.warning(f"Request failed for route_id {route_id}: {e}")
             except Exception as e:
                 logging.warning(f"Unexpected error for route_id {route_id}: {e}")
 
-    print(f"Saved data for {len(routes)} routes to {filename}")
+    print(f"Saved {len(route_ids)} routes to {stops_file} and {intervals_file}.")
 
 
 if __name__ == "__main__":
-    save_stops_to_csv()
+    save_all_data_to_csv()

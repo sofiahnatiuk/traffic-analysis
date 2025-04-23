@@ -2,9 +2,9 @@ import requests
 from typing import Dict
 
 class TransportFetcher:
-    BASE_URL = "https://www.eway.in.ua/ajax/ua"
-    ALL_ROUTES_PATH = "/lviv/routesPopup"
-    ROUTE_DETAIL_PATH = "/lviv/routeInfo/{route_id}"
+    BASE_URL = "https://www.eway.in.ua/ajax/ua/lviv"
+    ALL_ROUTES_PATH = "/routesPopup"
+    ROUTE_DETAIL_PATH = "/routeInfo/{route_id}"
 
     HEADERS = {
         "User-Agent": (

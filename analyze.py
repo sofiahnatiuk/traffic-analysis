@@ -1,6 +1,5 @@
 import pandas as pd
 
-
 class RouteDataLoader:
     """
     Loads and prepares data from CSV files.
@@ -69,16 +68,11 @@ class StopAnalyzer:
         return stop_stats.sort_values(by="adjusted_vehicles_per_day", ascending=False)
 
 
-def main():
-    loader = RouteDataLoader("stops.csv", "intervals.csv")
+def get_busiest_stops(stops_file: str, intervals_file: str) -> pd.DataFrame:
+    loader = RouteDataLoader(stops_file, intervals_file)
     stops_df, intervals_df = loader.get_dataframes()
 
     analyzer = StopAnalyzer(stops_df, intervals_df)
     busiest = analyzer.compute_busiest_stops()
 
-    print("Top 10 Busiest Stops:")
-    print(busiest.head(10).to_string(index=False))
-
-
-if __name__ == "__main__":
-    main()
+    return busiest.head(10)

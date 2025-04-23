@@ -21,9 +21,12 @@ class TransportParser:
         return stops
 
     @staticmethod
-    def parse_intervals(route_data: Dict) -> List[Tuple[str, str, int]]:
-        intervals = []
-        for day_pattern, ranges in route_data.get("intervals", {}).items():
-            for entry in ranges:
-                intervals.append((entry["from"], entry["to"], entry["i"]))
-        return intervals
+    def parse_intervals(route_data: Dict) -> List[Tuple[str, str, int, str]]:
+            """
+            Parse the intervals for each route, including the weekdays mask.
+            """
+            intervals = []
+            for day_pattern, ranges in route_data.get("intervals", {}).items():
+                for entry in ranges:
+                    intervals.append((entry["from"], entry["to"], entry["i"], day_pattern))  # Add day pattern here
+            return intervals

@@ -29,17 +29,19 @@ def save_all_data_to_csv(
         interval_writer = csv.writer(inf)
 
         stop_writer.writerow(["route_id", "stop_id", "stop_name", "direction"])
-        interval_writer.writerow(["route_id", "from", "to", "interval_sec"])
+        interval_writer.writerow(["route_id", "from", "to", "interval_sec", "weekdays"])
 
         for route_id in route_ids:
             try:
                 route_data = fetcher.fetch_route_detail(route_id)
 
+                # Save stops data
                 for stop_id, stop_name, direction in parser.parse_stops(route_data):
                     stop_writer.writerow([route_id, stop_id, stop_name, direction])
 
-                for from_time, to_time, interval in parser.parse_intervals(route_data):
-                    interval_writer.writerow([route_id, from_time, to_time, interval])
+                # Save intervals data
+                for from_time, to_time, interval, weekdays in parser.parse_intervals(route_data):
+                    interval_writer.writerow([route_id, from_time, to_time, interval, weekdays])
 
             except RequestException as e:
                 logging.warning(f"Request failed for route_id {route_id}: {e}")

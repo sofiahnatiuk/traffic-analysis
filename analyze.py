@@ -25,15 +25,16 @@ class StopAnalyzer:
 
     def _get_weekday_weight(self, weekdays: str) -> int:
         """
-        Converts a string of weekdays (e.g., '1111100') to a weight based on the number of days.
+        Calculate the number of days the transport runs based on the weekday mask.
         """
-        return weekdays.count('1')
+        weekdays_str = str(weekdays)  # Ensure it's a string
+        return weekdays_str.count('1')
 
     def estimate_vehicles_per_day(self) -> pd.DataFrame:
         """
         Estimates number of vehicles per route per day using interval data,
         incorporating weekday weights.
-        Returns a DataFrame with 'route_id' and 'weighted_vehicles_per_day'.
+        Returns a DataFrame with 'route_id' and 'adjusted_vehicles_per_day'.
         """
         df = self.intervals_df.copy()
 
@@ -50,10 +51,10 @@ class StopAnalyzer:
         df["weekday_weight"] = df["weekday_mask"].apply(self._get_weekday_weight)
 
         # Now apply the weekday weight to the vehicles per day estimate
-        df["weighted_vehicles_per_day"] = df["vehicles_per_day"] * df["weekday_weight"]
+        df["adjusted_vehicles_per_day"] = df["vehicles_per_day"] * df["weekday_weight"]
 
-        # Group by route and calculate the average weighted vehicles per day
-        result = df.groupby("route_id")["weighted_vehicles_per_day"].mean().reset_index()
+        # Group by route and calculate the average adjusted vehicles per day
+        result = df.groupby("route_id")["adjusted_vehicles_per_day"].mean().reset_index()
         return result
 
     def compute_busiest_stops(self) -> pd.DataFrame:
@@ -64,8 +65,8 @@ class StopAnalyzer:
         merged = pd.merge(self.stops_df, vehicles_df, on="route_id", how="left")
 
         # Aggregate by stop and compute total vehicles per stop
-        stop_stats = merged.groupby(["stop_id", "stop_name"])["weighted_vehicles_per_day"].sum().reset_index()
-        return stop_stats.sort_values(by="weighted_vehicles_per_day", ascending=False)
+        stop_stats = merged.groupby(["stop_id", "stop_name"])["adjusted_vehicles_per_day"].sum().reset_index()
+        return stop_stats.sort_values(by="adjusted_vehicles_per_day", ascending=False)
 
 
 def main():
@@ -76,7 +77,7 @@ def main():
     busiest = analyzer.compute_busiest_stops()
 
     print("Top 10 Busiest Stops:")
-    print(busiest.head(10))
+    print(busiest.head(10).to_string(index=False))
 
 
 if __name__ == "__main__":

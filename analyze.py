@@ -33,7 +33,7 @@ class StopAnalyzer:
         """
         Estimates number of vehicles per route per day using interval data,
         incorporating weekday weights.
-        Returns a DataFrame with 'route_id' and 'adjusted_vehicles_per_day'.
+        Returns a DataFrame with 'route_id' and 'vehicles_per_week'.
         """
         df = self.intervals_df.copy()
 
@@ -50,10 +50,10 @@ class StopAnalyzer:
         df["weekday_weight"] = df["weekday_mask"].apply(self._get_weekday_weight)
 
         # Now apply the weekday weight to the vehicles per day estimate
-        df["adjusted_vehicles_per_day"] = df["vehicles_per_day"] * df["weekday_weight"]
+        df["vehicles_per_week"] = df["vehicles_per_day"] * df["weekday_weight"]
 
         # Group by route and calculate the average adjusted vehicles per day
-        result = df.groupby("route_id")["adjusted_vehicles_per_day"].mean().reset_index()
+        result = df.groupby("route_id")["vehicles_per_week"].mean().reset_index()
         return result
 
     def compute_busiest_stops(self) -> pd.DataFrame:
@@ -67,12 +67,12 @@ class StopAnalyzer:
 
         # Aggregate by stop and compute total vehicles per stop
         stop_stats = merged.groupby(["stop_id", "stop_name"])[
-            "adjusted_vehicles_per_day"
+            "vehicles_per_week"
         ].sum().reset_index()
 
         # Join coordinates back in
         stop_stats = pd.merge(stop_stats, stop_coords, on="stop_id", how="left")
-        return stop_stats.sort_values(by="adjusted_vehicles_per_day", ascending=False)
+        return stop_stats.sort_values(by="vehicles_per_week", ascending=False)
 
 
 def get_busiest_stops(stops_file: str, intervals_file: str, output_csv: str = "busiest_stops.csv", top_n: int = 10) -> pd.DataFrame:

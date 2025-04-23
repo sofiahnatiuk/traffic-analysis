@@ -5,7 +5,7 @@ def create_busiest_stops_map(stops_csv: str, output_html: str = "busiest_stops_m
     df = pd.read_csv(stops_csv)
 
     # Ensure we only take the top N based on vehicle traffic
-    df_sorted = df.sort_values("adjusted_vehicles_per_day", ascending=False).head(top_n)
+    df_sorted = df.sort_values("vehicles_per_week", ascending=False).head(top_n)
 
     # Calculate map center
     avg_lat = df_sorted["latitude"].mean()
@@ -18,7 +18,7 @@ def create_busiest_stops_map(stops_csv: str, output_html: str = "busiest_stops_m
     for _, row in df_sorted.iterrows():
         folium.Marker(
             location=[row["latitude"], row["longitude"]],
-            popup=f"{row['stop_name']} ({int(row['adjusted_vehicles_per_day'])} vehicles/day)",
+            popup=f"{row['stop_name']} ({int(row['vehicles_per_week'])} vehicles/day)",
             tooltip=row["stop_name"]
         ).add_to(map_)
 

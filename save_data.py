@@ -28,12 +28,14 @@ def save_all_data_to_csv(
         try:
             route_data = fetcher.fetch_route_detail(route_id)
 
-            for stop_id, stop_name, direction in parser.parse_stops(route_data):
+            for stop_id, stop_name, direction, latitude, longitude in parser.parse_stops(route_data):
                 stops.append({
                     "route_id": route_id,
                     "stop_id": stop_id,
                     "stop_name": stop_name,
-                    "direction": direction
+                    "direction": direction,
+                    "latitude": latitude,
+                    "longitude": longitude
                 })
 
             for from_time, to_time, interval, weekdays in parser.parse_intervals(route_data):

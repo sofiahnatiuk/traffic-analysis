@@ -63,16 +63,25 @@ class StopAnalyzer:
         vehicles_df = self.estimate_vehicles_per_day()
         merged = pd.merge(self.stops_df, vehicles_df, on="route_id", how="left")
 
+        stop_coords = self.stops_df[["stop_id", "latitude", "longitude"]].drop_duplicates(subset="stop_id")
+
         # Aggregate by stop and compute total vehicles per stop
-        stop_stats = merged.groupby(["stop_id", "stop_name"])["adjusted_vehicles_per_day"].sum().reset_index()
+        stop_stats = merged.groupby(["stop_id", "stop_name"])[
+            "adjusted_vehicles_per_day"
+        ].sum().reset_index()
+
+        # Join coordinates back in
+        stop_stats = pd.merge(stop_stats, stop_coords, on="stop_id", how="left")
         return stop_stats.sort_values(by="adjusted_vehicles_per_day", ascending=False)
 
 
-def get_busiest_stops(stops_file: str, intervals_file: str, top_n: int = 10) -> pd.DataFrame:
+def get_busiest_stops(stops_file: str, intervals_file: str, output_csv: str = "busiest_stops.csv", top_n: int = 10) -> pd.DataFrame:
     loader = RouteDataLoader(stops_file, intervals_file)
     stops_df, intervals_df = loader.get_dataframes()
 
     analyzer = StopAnalyzer(stops_df, intervals_df)
     busiest = analyzer.compute_busiest_stops()
 
+    busiest.head(top_n).to_csv(output_csv, index=False)
+    print(f"Saved top {top_n} busiest stops to {output_csv}")
     return busiest.head(top_n)

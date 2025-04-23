@@ -16,8 +16,10 @@ class TransportParser:
             for stop in route_data.get("stops", {}).get(direction, []):
                 stop_id = stop.get("i")
                 stop_name = stop.get("n")
+                latitude = stop.get("x")
+                longitude = stop.get("y")
                 if stop_id and stop_name:
-                    stops.append((stop_id, stop_name, direction))
+                    stops.append((stop_id, stop_name, direction, latitude, longitude))
         return stops
 
     @staticmethod

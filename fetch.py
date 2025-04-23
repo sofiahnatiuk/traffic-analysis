@@ -9,9 +9,9 @@ class TransportDataFetcher:
     A client for fetching public transport data from eway.in.ua.
     """
 
-    BASE_URL = "https://www.eway.in.ua/ajax"
-    ALL_ROUTES_PATH = "/ua/lviv/routesPopup"
-    ROUTE_DETAIL_PATH = "/lviv/routeScheme/{route_id}"
+    BASE_URL = "https://www.eway.in.ua/ajax/ua"
+    ALL_ROUTES_PATH = "/lviv/routesPopup"
+    ROUTE_DETAIL_PATH = "/lviv/routeInfo/{route_id}"
 
     DEFAULT_HEADERS = {
         "User-Agent": (

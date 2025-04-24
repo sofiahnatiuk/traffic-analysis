@@ -1,12 +1,12 @@
 import logging
 import pandas as pd
-from fetch import TransportFetcher
-from parse import TransportParser
+from src.fetch import TransportFetcher
+from src.parse import TransportParser
 from requests.exceptions import RequestException
 
 def save_all_data_to_csv(
-    stops_file: str = "stops.csv",
-    intervals_file: str = "intervals.csv"
+    stops_file: str = "data/stops.csv",
+    intervals_file: str = "data/intervals.csv"
 ) -> None:
     fetcher = TransportFetcher()
     parser = TransportParser()

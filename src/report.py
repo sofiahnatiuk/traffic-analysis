@@ -1,11 +1,11 @@
 from pathlib import Path
-from map_locations import create_busiest_stops_map
-from busiest_stops_chart import save_busiest_stops_bar_chart
+from src.map_locations import create_busiest_stops_map
+from src.busiest_stops_chart import save_busiest_stops_bar_chart
 import pandas as pd
 
 def create_combined_report(
     full_df: pd.DataFrame,
-    output_html: str = "combined_report.html",
+    output_html: str = "reports/combined_report.html",
     chart_top_n: int = 15,
     map_top_n: int = 50
 ):
@@ -17,7 +17,7 @@ def create_combined_report(
 
     # Create and save map as a standalone file
     map_ = create_busiest_stops_map(map_df)
-    map_path = "temp_map.html"
+    map_path = "reports/temp_map.html"
     map_.save(map_path)
 
     map_html_iframe = f'<iframe src="{map_path}" width="90%" height="600px" frameborder="0"></iframe>'

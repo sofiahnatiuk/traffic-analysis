@@ -1,7 +1,7 @@
 import pandas as pd
 import matplotlib.pyplot as plt
 
-def save_busiest_stops_bar_chart(df: pd.DataFrame, image_path: str = "bar_chart.png", top_n: int = 15):
+def save_busiest_stops_bar_chart(df: pd.DataFrame, image_path: str = "reports/bar_chart.png", top_n: int = 15):
     df_top = df.sort_values("vehicles_per_week", ascending=False).head(top_n)
 
     import matplotlib.pyplot as plt

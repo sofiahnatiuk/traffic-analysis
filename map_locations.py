@@ -1,26 +1,34 @@
 import pandas as pd
 import folium
+import branca.colormap as cm
 
-def create_busiest_stops_map(stops_csv: str, output_html: str = "busiest_stops_map.html", top_n: int = 10):
-    df = pd.read_csv(stops_csv)
+def create_busiest_stops_map(df: pd.DataFrame) -> folium.Map:
+    avg_lat = df["latitude"].mean()
+    avg_lon = df["longitude"].mean()
 
-    # Ensure we only take the top N based on vehicle traffic
-    df_sorted = df.sort_values("vehicles_per_week", ascending=False).head(top_n)
-
-    # Calculate map center
-    avg_lat = df_sorted["latitude"].mean()
-    avg_lon = df_sorted["longitude"].mean()
-
-    # Create map
     map_ = folium.Map(location=[avg_lat, avg_lon], zoom_start=14)
 
-    # Add markers
-    for _, row in df_sorted.iterrows():
-        folium.Marker(
+    # Set up a color scale based on vehicles_per_week
+    min_val = df["vehicles_per_week"].min()
+    max_val = df["vehicles_per_week"].max()
+    colormap = cm.linear.YlOrRd_09.scale(min_val, max_val)
+    colormap.caption = "Vehicles per Week"
+
+    # Add colored markers
+    for _, row in df.iterrows():
+        color = colormap(row["vehicles_per_week"])
+        folium.CircleMarker(
             location=[row["latitude"], row["longitude"]],
-            popup=f"{row['stop_name']} ({int(row['vehicles_per_week'])} vehicles/day)",
+            radius=6,
+            color=color,
+            fill=True,
+            fill_color=color,
+            fill_opacity=0.9,
+            popup=f"{row['stop_name']} ({int(row['vehicles_per_week'])} vehicles/week)",
             tooltip=row["stop_name"]
         ).add_to(map_)
 
-    map_.save(output_html)
-    print(f"Map saved to {output_html}")
+    # Add color scale legend to map
+    colormap.add_to(map_)
+
+    return map_

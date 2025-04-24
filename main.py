@@ -1,7 +1,6 @@
 from save_data import save_all_data_to_csv
 from analyze import get_busiest_stops
-from map_locations import create_busiest_stops_map
-
+from report import create_combined_report
 
 def main():
     # Step 1: Save the data (fetch + parse)
@@ -14,7 +13,7 @@ def main():
 
     print("Top Busiest Stops:")
     print(busiest_stops.to_string(index=False))
-    create_busiest_stops_map("busiest_stops.csv", top_n=top_n)
+    create_combined_report(busiest_stops, chart_top_n=15, map_top_n=top_n)
 
 if __name__ == "__main__":
     main()

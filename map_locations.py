@@ -6,12 +6,13 @@ def create_busiest_stops_map(df: pd.DataFrame) -> folium.Map:
     avg_lat = df["latitude"].mean()
     avg_lon = df["longitude"].mean()
 
-    map_ = folium.Map(location=[avg_lat, avg_lon], zoom_start=14)
+    map_ = folium.Map(location=[avg_lat, avg_lon], zoom_start=12)
 
     # Set up a color scale based on vehicles_per_week
     min_val = df["vehicles_per_week"].min()
     max_val = df["vehicles_per_week"].max()
-    colormap = cm.linear.YlOrRd_09.scale(min_val, max_val)
+
+    colormap = cm.linear.Dark2_06.scale(min_val, max_val)
     colormap.caption = "Vehicles per Week"
 
     # Add colored markers

@@ -172,5 +172,4 @@ cython_debug/
 
 # PyPI configuration file
 .pypirc
-*.csv
-busiest_stops_map.html
+/data

@@ -4,7 +4,6 @@ from fetch import TransportFetcher
 from parse import TransportParser
 from requests.exceptions import RequestException
 
-
 def save_all_data_to_csv(
     stops_file: str = "stops.csv",
     intervals_file: str = "intervals.csv"
@@ -18,16 +17,20 @@ def save_all_data_to_csv(
         format="%(asctime)s - %(levelname)s - %(message)s"
     )
 
+    # Step 1: Fetch all routes and extract route IDs
     all_routes_data = fetcher.fetch_all_routes()
     route_ids = parser.parse_route_ids(all_routes_data)
+
+    # Step 2: Fetch all route details in parallel
+    route_details = fetcher.fetch_multiple_route_details(route_ids, max_workers=10)  # Parallel fetching
 
     stops = []
     intervals = []
 
-    for route_id in route_ids:
+    # Step 3: Parse stops and intervals from the fetched data
+    for route_id, route_data in route_details.items():
         try:
-            route_data = fetcher.fetch_route_detail(route_id)
-
+            # Parse stops and intervals for this route
             for stop_id, stop_name, direction, latitude, longitude in parser.parse_stops(route_data):
                 stops.append({
                     "route_id": route_id,
@@ -47,17 +50,14 @@ def save_all_data_to_csv(
                     "weekdays": weekdays
                 })
 
-        except RequestException as e:
-            logging.warning(f"Request failed for route_id {route_id}: {e}")
         except Exception as e:
-            logging.warning(f"Unexpected error for route_id {route_id}: {e}")
+            logging.warning(f"Error processing route_id {route_id}: {e}")
 
-    # Convert lists to DataFrames and write to CSV
+    # Step 4: Convert the parsed data to DataFrames and write to CSV
     pd.DataFrame(stops).to_csv(stops_file, index=False)
     pd.DataFrame(intervals).to_csv(intervals_file, index=False)
 
     print(f"Saved {len(route_ids)} routes to {stops_file} and {intervals_file}.")
-
 
 if __name__ == "__main__":
     save_all_data_to_csv()

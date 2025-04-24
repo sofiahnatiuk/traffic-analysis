@@ -1,5 +1,6 @@
 import requests
-from typing import Dict
+from typing import Dict, List
+from concurrent.futures import ThreadPoolExecutor, as_completed
 
 class TransportFetcher:
     BASE_URL = "https://www.eway.in.ua/ajax/ua/lviv"
@@ -33,3 +34,18 @@ class TransportFetcher:
         response = self.session.get(url)
         response.raise_for_status()
         return response.json()
+
+    def fetch_multiple_route_details(self, route_ids: List[int], max_workers: int = 10) -> Dict[int, Dict]:
+        results = {}
+        with ThreadPoolExecutor(max_workers=max_workers) as executor:
+            # Submit each fetch_route_detail call as a separate task
+            futures = {executor.submit(self.fetch_route_detail, rid): rid for rid in route_ids}
+            for future in as_completed(futures):
+                rid = futures[future]
+                try:
+                    # Get the result of the future (blocking until it's done)
+                    data = future.result()
+                    results[rid] = data
+                except Exception as e:
+                    print(f"Failed to fetch route {rid}: {e}")
+        return results

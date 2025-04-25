@@ -11,7 +11,7 @@ A python script that identifies the most high-traffic locations in Lviv based on
 - Interactive, draggable map generated with colored markers to show top locations
 - Logging for info, warning and error messages
 
-### Installation guide
+### Installation and usage guide
 1. Clone the repository
    ```bash
    git clone https://github.com/sofiahnatiuk/traffic-analysis.git
@@ -64,6 +64,8 @@ Get more information for each location with a click:
 A combined result with both the map and the chart is available at 'reports/combined_report.html':
 
 ![](images/combined_report.png)
+
+Also, 'busiest_stops.csv' includes the list of the most popular locations, the estimated traffic per week as well as coordinates.
 
   ### Technologies used
   - Python 3.10

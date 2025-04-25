@@ -11,6 +11,7 @@ A python script that identifies the most high-traffic locations in Lviv based on
 - Interactive, draggable map generated with colored markers to show top locations
 - Logging for info, warning and error messages
 - Users may choose the number of top locations seen in the chart or on the map, as well as the minimal distance for clustering
+- PEP-8 compliant code with type hints and type annotations
 
 ### Installation and usage guide
 1. Clone the repository

@@ -51,19 +51,19 @@ A python script that identifies the most high-traffic locations in Lviv based on
 ### Sample results:
 When the program finishes running, 'reports/bar_chart.png' is created. This image is a diagram showing top busiest locations. Sample chart for top 15 locations:
 
-<image>
+![](images/sample_chart.png)
 
 Then, a map with top locations is generated in 'reports/map.html'. The map is scallable and draggable. Sample map for top 200 locations:
 
-<image>
+![](images/sample_map.png)
 
 Get more information for each location with a click:
 
-<image>
+![](images/map_detail.png)
 
 A combined result with both the map and the chart is available at 'reports/combined_report.html':
 
-<image>
+![](images/combined_report.png)
 
   ### Technologies used
   - Python 3.9

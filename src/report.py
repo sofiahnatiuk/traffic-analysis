@@ -17,10 +17,10 @@ def create_combined_report(
 
     # Create and save map as a standalone file
     map_ = create_busiest_stops_map(map_df)
-    map_path = "reports/temp_map.html"
+    map_path = "reports/map.html"
     map_.save(map_path)
 
-    map_html_iframe = f'<iframe src="{map_path}" width="90%" height="600px" frameborder="0"></iframe>'
+    map_html_iframe = f'<iframe src="map.html" width="90%" height="600px" frameborder="0"></iframe>'
 
     # Combine into final HTML
     html = f"""

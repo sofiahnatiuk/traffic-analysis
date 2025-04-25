@@ -3,6 +3,16 @@ import folium
 import branca.colormap as cm
 
 def create_busiest_stops_map(df: pd.DataFrame) -> folium.Map:
+    """
+    Creates an interactive Folium map showing the busiest stops based on vehicle frequency.
+
+    Args:
+        df (pd.DataFrame): DataFrame with columns ['stop_name', 'latitude', 'longitude', 'vehicles_per_week']
+
+    Returns:
+        folium.Map: Interactive map object with color-scaled stop markers.
+    """
+
     avg_lat = df["latitude"].mean()
     avg_lon = df["longitude"].mean()
 

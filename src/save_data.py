@@ -8,6 +8,10 @@ def save_all_data_to_csv(
     stops_file: str = "data/stops.csv",
     intervals_file: str = "data/intervals.csv"
 ) -> None:
+    """
+    Saves fetched data to csv: stops.csv includes stops for every route
+    and intervals.csv includes schedule-related info for routes
+    """
     fetcher = TransportFetcher()
     parser = TransportParser()
 

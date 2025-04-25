@@ -1,6 +1,9 @@
 from typing import Dict, List, Tuple
 
 class TransportParser:
+    """
+    Parses route and stops data.
+    """
     @staticmethod
     def parse_route_ids(data: Dict) -> List[int]:
         route_ids = set()
@@ -10,7 +13,10 @@ class TransportParser:
         return sorted(route_ids)
 
     @staticmethod
-    def parse_stops(route_data: Dict) -> List[Tuple[int, str, str]]:
+    def parse_stops(route_data: Dict) -> List[Tuple[int, str, str, float, float]]:
+        """
+        Parses the list of stops for a route
+        """
         stops = []
         for direction in ("forward", "backward"):
             for stop in route_data.get("stops", {}).get(direction, []):
@@ -30,5 +36,5 @@ class TransportParser:
             intervals = []
             for day_pattern, ranges in route_data.get("intervals", {}).items():
                 for entry in ranges:
-                    intervals.append((entry["from"], entry["to"], entry["i"], day_pattern))  # Add day pattern here
+                    intervals.append((entry["from"], entry["to"], entry["i"], day_pattern))
             return intervals

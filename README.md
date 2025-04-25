@@ -33,7 +33,7 @@ A python script that identifies the most high-traffic locations in Lviv based on
    ```bash
    python main.py --help
    ```
-  Output:
+ - Output:
    
   ```bash
   usage: main.py [-h] [--map_top MAP_TOP] [--chart_top CHART_TOP] [--eps EPS]

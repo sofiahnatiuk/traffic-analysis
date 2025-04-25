@@ -66,7 +66,7 @@ A combined result with both the map and the chart is available at 'reports/combi
 ![](images/combined_report.png)
 
   ### Technologies used
-  - Python 3.9
+  - Python 3.10
   - requests - for data fetching
   - pandas, numpy - for data analysis
   - matplotlib - for chart visualisation

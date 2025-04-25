@@ -22,7 +22,7 @@ def create_busiest_stops_map(df: pd.DataFrame) -> folium.Map:
     min_val = df["vehicles_per_week"].min()
     max_val = df["vehicles_per_week"].max()
 
-    colormap = cm.linear.Dark2_06.scale(min_val, max_val)
+    colormap = cm.linear.Dark2_03.scale(min_val, max_val)
     colormap.caption = "Vehicles per Week"
 
     # Add colored markers

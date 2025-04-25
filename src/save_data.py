@@ -80,6 +80,3 @@ def save_all_data_to_csv(
 
     logging.info(f"Saved {len(stops)} stops to {stops_file} and {len(intervals)} intervals to {intervals_file}.")
     print(f"Saved {len(route_ids)} routes to {stops_file} and {intervals_file}.")
-
-if __name__ == "__main__":
-    save_all_data_to_csv()

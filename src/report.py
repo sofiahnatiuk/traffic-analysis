@@ -9,6 +9,21 @@ def create_combined_report(
     chart_top_n: int = 15,
     map_top_n: int = 50
 ):
+    """
+    Creates a combined HTML report showing:
+    - A bar chart of the top N busiest stops.
+    - An interactive map of the top N busiest stops.
+
+    Args:
+        full_df (pd.DataFrame): DataFrame with stop data including 'vehicles_per_week'.
+        output_html (str): Path to save the final report.
+        chart_top_n (int): Number of stops to include in bar chart.
+        map_top_n (int): Number of stops to include in map.
+
+    Returns:
+        None
+    """
+
     chart_df = full_df.sort_values("vehicles_per_week", ascending=False).head(chart_top_n)
     map_df = full_df.sort_values("vehicles_per_week", ascending=False).head(map_top_n)
 
@@ -18,9 +33,10 @@ def create_combined_report(
     # Create and save map as a standalone file
     map_ = create_busiest_stops_map(map_df)
     map_path = "reports/map.html"
+    Path(map_path).parent.mkdir(parents=True, exist_ok=True)
     map_.save(map_path)
 
-    map_html_iframe = f'<iframe src="map.html" width="90%" height="600px" frameborder="0"></iframe>'
+    map_html_iframe = f'<iframe src="{Path(map_path).name}" width="90%" height="600px" frameborder="0"></iframe>'
 
     # Combine into final HTML
     html = f"""

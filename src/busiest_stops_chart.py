@@ -1,5 +1,6 @@
 import pandas as pd
 import matplotlib.pyplot as plt
+from pathlib import Path
 
 def save_busiest_stops_bar_chart(df: pd.DataFrame, image_path: str = "reports/bar_chart.png", top_n: int = 15):
     df_top = df.sort_values("vehicles_per_week", ascending=False).head(top_n)
@@ -10,6 +11,7 @@ def save_busiest_stops_bar_chart(df: pd.DataFrame, image_path: str = "reports/ba
     plt.title(f"Top {top_n} Busiest Stops")
     plt.gca().invert_yaxis()
     plt.tight_layout()
+    Path(image_path).parent.mkdir(parents=True, exist_ok=True)
     plt.savefig(image_path)
     plt.close()
 

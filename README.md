@@ -4,12 +4,13 @@ A python script that identifies the most high-traffic locations in Lviv based on
 ### Features
 - Asynchronous data fetching
 - Data parsing into structured tables
-- High-traffic locations are identified based on the number of vehicles per week
+- High-traffic locations are identified based on the number of vehicles (trams, trolleybuses and minibuses) per week
 - Analysis also accounts for vehicles that are not on route every day (e.g. only on weekends)
 - Clustering multiple stops together if they are very close (e.g. less than 50 meters away)
-- Bar chart generation for top high-traffic location
+- Bar chart generation for top high-traffic locations
 - Interactive, draggable map generated with colored markers to show top locations
 - Logging for info, warning and error messages
+- Users may choose the number of top locations seen in the chart or on the map, as well as the minimal distance for clustering
 
 ### Installation and usage guide
 1. Clone the repository
@@ -68,7 +69,7 @@ A combined result with both the map and the chart is available at 'reports/combi
 Also, 'reports\busiest_stops.csv' includes the list of the most popular locations, the estimated traffic per week as well as coordinates.
 
 ### Result analysis
-Based on the received results, the most high-traffic locations in Lviv include "вул. Хімічна", "Привокзальний ринок", "Шевченківська райадміністрація".
+Based on the received results, the most high-traffic locations in Lviv include "вул. Хімічна", "Привокзальний ринок", "Шевченківська райадміністрація". The least popular locations inlcude "Мотозавод", "вул. Вільхова", "вул. Вівсяна".
 
 ### Technologies used
   - Python 3.10

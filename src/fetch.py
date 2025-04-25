@@ -35,6 +35,18 @@ class TransportFetcher:
         self.session = requests.Session()
         self.session.headers.update(self.HEADERS)
 
+    def __enter__(self):
+        """
+        Allows TransportFetcher to be used in a `with` statement.
+        """
+        return self
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        """
+        Ensures that the session is closed when done.
+        """
+        self.session.close()
+
     def fetch_all_routes(self) -> Dict:
         """
         Fetches all route ids. Returns JSON-like data.

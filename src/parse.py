@@ -7,7 +7,7 @@ class TransportParser:
     @staticmethod
     def parse_route_ids(data: Dict) -> List[int]:
         route_ids = set()
-        for mode in ("bus_4", "tram_3", "trol_2", "marshrutka_8"):
+        for mode in ("tram_3", "trol_2", "marshrutka_8"):
             for item in data.get(mode, []):
                 route_ids.add(item[0])
         return sorted(route_ids)

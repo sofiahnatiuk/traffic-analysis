@@ -1,12 +1,12 @@
 # Public Traffic Analysis Tool
-A python script that identifies the most high-traffic locations in Lviv based on public transport data from an external website. May help find best places for commercial purposes (e.g. retail) 
+A python script that identifies the most high-traffic locations in Lviv based on public transport data from an external website. May help find best places for commercial purposes (e.g. retail)
 
 ### Features
 - Asynchronous data fetching
 - Data parsing into structured tables
 - High-traffic locations are identified based on the number of vehicles per week
 - Analysis also accounts for vehicles that are not on route every day (e.g. only on weekends)
-- Clustering multiple stops together if they are very close (e.g. less than 50 meters away) 
+- Clustering multiple stops together if they are very close (e.g. less than 50 meters away)
 - Bar chart generation for top high-traffic location
 - Interactive, draggable map generated with colored markers to show top locations
 - Logging for info, warning and error messages
@@ -34,12 +34,12 @@ A python script that identifies the most high-traffic locations in Lviv based on
    python main.py --help
    ```
  - Output:
-   
+
   ```bash
   usage: main.py [-h] [--map_top MAP_TOP] [--chart_top CHART_TOP] [--eps EPS]
-  
+
   Analyze and report on busiest public transport stops
-  
+
   optional arguments:
     -h, --help            show this help message and exit
     --map_top MAP_TOP     Number of top busiest stops to include on the map
@@ -65,12 +65,15 @@ A combined result with both the map and the chart is available at 'reports/combi
 
 ![](images/combined_report.png)
 
-Also, 'busiest_stops.csv' includes the list of the most popular locations, the estimated traffic per week as well as coordinates.
+Also, 'reports\busiest_stops.csv' includes the list of the most popular locations, the estimated traffic per week as well as coordinates.
 
-  ### Technologies used
+### Result analysis
+Based on the received results, the most high-traffic locations in Lviv include "вул. Хімічна", "Привокзальний ринок", "Шевченківська райадміністрація".
+
+### Technologies used
   - Python 3.10
   - requests - for data fetching
   - pandas, numpy - for data analysis
   - matplotlib - for chart visualisation
   - folium - for map visualization
-    
+
